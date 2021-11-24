@@ -24,7 +24,7 @@ parser.add_argument("--embedding_dim", default=32, type=int)
 ##### Dataset params
 parser.add_argument("--dataset", default="HDFS", type=str)
 parser.add_argument(
-    "--data_dir", default="../data/processed/HDFS_100k/hdfs_0.0_tar", type=str
+    "--data_dir", default="../data/processed/Intrepid_RAS/intrepid_ras_0.2_tar", type=str
 )
 parser.add_argument("--window_size", default=10, type=int)
 parser.add_argument("--stride", default=1, type=int)
