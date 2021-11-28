@@ -74,7 +74,7 @@ if __name__ == "__main__":
     dataloader_test = DataLoader(
         dataset_test, batch_size=4096, shuffle=False, pin_memory=True
     )
-
+    # ext.meta_data = {'num_labels': 14, 'vocab_size': 14}
     model = Transformer(
         meta_data=ext.meta_data, model_save_path=model_save_path, **params
     )
