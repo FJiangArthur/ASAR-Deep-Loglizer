@@ -160,15 +160,15 @@ if __name__ == "__main__":
 
     num_labels = ext.meta_data['num_labels']
     generator_model = Generator(feature_len, hidden_size, num_layers, num_keys, emb_dimension)
+    generator_model.build((None, feature_len))
     # generator_model.build((None, max_input_senquence_len))
     # inputs = tf.keras.Input(shape=(max_input_senquence_len,))
     # abe = generator_model.call(inputs)
 
     discriminator_model = Discriminator(feature_len, hidden_size, num_layers, num_keys, emb_dimension, num_labels)
-    # discriminator_model.build()
+    discriminator_model.build((None, feature_len))
     # inputs = tf.keras.Input(shape=(max_input_senquence_len,))
     # abe = discriminator_model.call(inputs)
-    noise_dim = max_input_senquence_len
-    noise_z = sample_noise(batch_size, max_input_senquence_len)
+    noise_z = sample_noise(batch_size, feature_len)
 
     gan_train(discriminator_model, generator_model, 10, dataset_train, noise_z)
