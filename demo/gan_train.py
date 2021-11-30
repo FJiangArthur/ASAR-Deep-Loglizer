@@ -160,7 +160,9 @@ def gan_test(discriminator, generator, epoches, train_loader, noise_z):
             d_loss = discriminator.loss_function(logits_fake, logits_real)
             train_loss += (g_loss + d_loss)
 
-        print(f"Train Epoch: {epoch} \tLoss: {train_loss / len(train_loader):.6f}")
+        print(f"Testing Epoch: {epoch} \tLoss: {train_loss / len(train_loader):.6f}")
+
+
 if __name__ == "__main__":
     seed_everything(params["random_seed"])
 
