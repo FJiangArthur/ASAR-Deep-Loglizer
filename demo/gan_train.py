@@ -128,12 +128,39 @@ def gan_train(discriminator, generator, epoches, train_loader, noise_z):
 
                 g_loss = generator.loss_function(logits_fake, logits_real)
                 d_loss = discriminator.loss_function(logits_fake, logits_real)
-
+                train_loss += (g_loss + d_loss)
             optimize(tape, generator, g_loss)
             optimize(tape, discriminator, d_loss)
 
         print(f"Train Epoch: {epoch} \tLoss: {train_loss / len(train_loader):.6f}")
 
+
+def gan_test(discriminator, generator, epoches, train_loader, noise_z):
+    for epoch in range(1, epoches + 1):
+        train_loss = 0
+        num_classes = 10
+        loss = None
+
+        for batch_idx, batch_list in enumerate(train_loader):
+            y = tf.convert_to_tensor([sub['window_anomalies'] for sub in batch_list])
+            x = tf.convert_to_tensor([sub['features'] for sub in batch_list])
+            # y = dict["window_anomalies"]
+            # x = dict["features"]
+
+            # x_t = x.transpose(1, 0)
+
+
+            G_sample = generator(noise_z)
+            labels_real = y
+            logits_real = discriminator(x)
+            # re-use discriminator weights on new inputs
+            logits_fake = discriminator(G_sample)
+
+            g_loss = generator.loss_function(logits_fake, logits_real)
+            d_loss = discriminator.loss_function(logits_fake, logits_real)
+            train_loss += (g_loss + d_loss)
+
+        print(f"Train Epoch: {epoch} \tLoss: {train_loss / len(train_loader):.6f}")
 if __name__ == "__main__":
     seed_everything(params["random_seed"])
 
