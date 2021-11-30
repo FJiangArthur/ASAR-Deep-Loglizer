@@ -199,3 +199,5 @@ if __name__ == "__main__":
     noise_z = sample_noise(batch_size, feature_len)
 
     gan_train(discriminator_model, generator_model, 10, dataset_train, noise_z)
+    print("Testing Now")
+    gan_test(discriminator_model, generator_model, 10, dataset_train, noise_z)
