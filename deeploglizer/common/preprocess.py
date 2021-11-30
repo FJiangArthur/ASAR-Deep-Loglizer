@@ -1,8 +1,8 @@
 import os
 import io
 import itertools
-import torch
 import numpy as np
+import tensorflow as tf
 from collections import Counter, defaultdict
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.base import BaseEstimator
@@ -73,7 +73,7 @@ class Vocab:
                 vocab_size - oov_count, vocab_size
             )
         )
-        return torch.from_numpy(pretrain_matrix)
+        return tf.convert_to_tensor(pretrain_matrix)
 
     def trp(self, l, n):
         """ Truncate or pad a list """
