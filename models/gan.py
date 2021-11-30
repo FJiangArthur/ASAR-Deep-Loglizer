@@ -37,7 +37,7 @@ class Generator(tf.keras.Model):
         self.lstm = tf.keras.layers.RNN(stacked_lstm, return_sequences=True,return_state=True)
 
         self.dense1 = tf.keras.layers.Dense(units=self.hidden_size, activation='sigmoid')
-        self.dense2 = tf.keras.layers.Dense(units=self.hidden_size, activation='sigmoid')
+        self.dense2 = tf.keras.layers.Dense(units=self.input_size, activation='sigmoid')
 
     @tf.function
     def call(self, x: tf.Tensor) -> tf.Tensor:
@@ -67,14 +67,14 @@ class Discriminator(tf.keras.Model):
         self.emb_dimension = emb_dimension
         self.num_labels = num_labels
 
-        # self.emb = tf.keras.layers.Embedding(self.num_keys,
-        #                                      self.emb_dimension,
-        #                                      embeddings_initializer='uniform',
-        #                                      mask_zero=True)
+        self.emb = tf.keras.layers.Embedding(self.input_size[0],
+                                             self.emb_dimension,
+                                             embeddings_initializer='uniform',
+                                             mask_zero=True)
 
-        # rnn_cells = [tf.keras.layers.LSTMCell(self.hidden_size) for _ in range(self.num_layers)]
-        # stacked_lstm = tf.keras.layers.StackedRNNCells(rnn_cells)
-        # self.lstm = tf.keras.layers.RNN(stacked_lstm,return_sequences=True,return_state=True)
+        rnn_cells = [tf.keras.layers.LSTMCell(self.hidden_size) for _ in range(self.num_layers)]
+        stacked_lstm = tf.keras.layers.StackedRNNCells(rnn_cells)
+        self.lstm = tf.keras.layers.RNN(stacked_lstm,return_sequences=True,return_state=True)
 
         self.dense1 = tf.keras.layers.Dense(units=self.hidden_size, activation='sigmoid')
         # TODO: Tune 100, use leaky relu

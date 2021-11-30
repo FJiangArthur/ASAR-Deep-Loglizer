@@ -63,14 +63,6 @@ optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate, beta_1=beta_1)
 
 
 def optimize(tape: tf.GradientTape, model: tf.keras.Model, loss: tf.Tensor) -> None:
-    """ This optimizes a model with respect to its loss
-
-    Inputs:
-    - tape: the Gradient Tape
-    - model: the model to be trained
-    - loss: the model's loss
-    """
-    # TODO: calculate the gradients our input model and apply them
     gradients = tape.gradient(loss, model.trainable_variables)
     optimizer.apply_gradients(zip(gradients, model.trainable_variables))
 
@@ -81,6 +73,7 @@ class tf_data_generator(tf.keras.utils.Sequence):
             self.max_input_size = 0
             self.batch_size = batch_size,
             flatten_data_list = []
+            self.feature_len = 0
             # flatten all sessions
             for session_idx, data_dict in enumerate(session_dict.values()):
                 features = data_dict["features"][feature_type]
@@ -96,6 +89,7 @@ class tf_data_generator(tf.keras.utils.Sequence):
                         "window_labels": window_labels[window_idx],
                         "window_anomalies": window_anomalies[window_idx],
                     }
+                    self.feature_len = len(features[window_idx])
                     flatten_data_list.append(sample)
             self.flatten_data_list = flatten_data_list
 
@@ -125,7 +119,7 @@ def gan_train(discriminator, generator, epoches, train_loader, noise_z):
 
             # x_t = x.transpose(1, 0)
 
-            with tf.GradientTape() as tape:
+            with tf.GradientTape(persistent=True) as tape:
                 G_sample = generator(noise_z)
                 labels_real = y
                 logits_real = discriminator(x)
@@ -158,18 +152,19 @@ if __name__ == "__main__":
     # create generator and discriminator
     # ext.meta_data = {'num_labels': 14, 'vocab_size': 14}
     max_input_senquence_len = dataset_train.max_input_size
+    feature_len = dataset_train.feature_len
     hidden_size = 256
     num_layers = 2
     num_keys = ext.meta_data['vocab_size']
     emb_dimension = 128
 
     num_labels = ext.meta_data['num_labels']
-    generator_model = Generator(max_input_senquence_len, hidden_size, num_layers, num_keys, emb_dimension)
+    generator_model = Generator(feature_len, hidden_size, num_layers, num_keys, emb_dimension)
     # generator_model.build((None, max_input_senquence_len))
     # inputs = tf.keras.Input(shape=(max_input_senquence_len,))
     # abe = generator_model.call(inputs)
 
-    discriminator_model = Discriminator(num_keys, hidden_size, num_layers, num_keys, emb_dimension, num_labels)
+    discriminator_model = Discriminator(feature_len, hidden_size, num_layers, num_keys, emb_dimension, num_labels)
     # discriminator_model.build()
     # inputs = tf.keras.Input(shape=(max_input_senquence_len,))
     # abe = discriminator_model.call(inputs)
