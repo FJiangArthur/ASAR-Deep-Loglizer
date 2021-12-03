@@ -83,16 +83,9 @@ class VAE_LSTM(tf_BasedModel):
         self.num_directions = num_directions
         self.use_tfidf = use_tfidf
         self.embedding_dim = embedding_dim
-
-        self.encoder = Sequential(layers=[
-            Dense(self.embedding_dim, activation="relu"),
-            Dense(self.embedding_dim, activation="relu"),
-            Dense(self.embedding_dim, activation="relu"),
-        ])
-        self.mu_layer = Dense(self.embedding_dim)
-        self.logvar_layer = Dense(self.embedding_dim)
-
-        self.lstm = tf.keras.layers.LSTM(self.hidden_size)
+        self.lstm1 = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(self.hidden_size))
+        self.lstm2 = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(self.hidden_size))
+        self.lstm3 = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(self.hidden_size))
 
         self.linear1 = Dense(
             self.hidden_size // 2)
@@ -111,15 +104,14 @@ class VAE_LSTM(tf_BasedModel):
         y = tf.squeeze(y)
 
         x = tf.convert_to_tensor(input_dict["features"])
-
         x = tf.nn.embedding_lookup(self.embedding_matrix, x)
-        x = self.encoder(x)
-        x = reparametrize(self.mu_layer(x), self.logvar_layer(x))
-        outputs = self.lstm(x)
+        outputs = self.lstm1(x)
+        outputs = self.lstm2(outputs)
+        outputs = self.lstm3(outputs)
 
         logits = self.linear2(self.linear1(tf.cast(outputs, dtype=tf.float32)))
         y_pred = tf.nn.softmax(logits)
-        loss = tf.reduce_sum(tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=y))
+        loss = tf.nn.softmax_cross_entropy_with_logits(y, logits)
 
         return_dict = {"loss": loss, "y_pred": y_pred}
         return return_dict
