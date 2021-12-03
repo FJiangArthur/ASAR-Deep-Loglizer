@@ -76,20 +76,25 @@ class VAE_LSTM(tf_BasedModel):
             **kwargs
         )
         self.num_labels = meta_data["num_labels"]
-
+        self.num_layers = num_layers
         self.feature_type = feature_type
         self.label_type = label_type
         self.hidden_size = hidden_size
         self.num_directions = num_directions
         self.use_tfidf = use_tfidf
         self.embedding_dim = embedding_dim
-        self.lstm1 = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(self.hidden_size))
-        self.lstm2 = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(self.hidden_size))
-        self.lstm3 = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(self.hidden_size))
+        rnn_cells = [tf.keras.layers.LSTMCell(self.hidden_size) for _ in range(self.num_layers)]
+        stacked_lstm = tf.keras.layers.StackedRNNCells(rnn_cells)
+        self.lstm = tf.keras.layers.RNN(stacked_lstm)
+
+        # self.lstm1 = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(self.hidden_size))
+        # self.lstm2 = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(self.hidden_size))
+        # self.lstm3 = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(self.hidden_size))
 
         self.linear1 = Dense(
-            self.hidden_size // 2)
-        self.linear2 = Dense(
+            self.hidden_size // 2, activation = 'relu')
+        self.linear2 = Dense(self.hidden_size * self.num_directions, activation = None)
+        self.linear3 = Dense(
             self.num_labels, activation=None,
         )
 
@@ -100,18 +105,20 @@ class VAE_LSTM(tf_BasedModel):
         elif self.label_type == "next_log":
             y = tf.convert_to_tensor(input_dict["window_labels"])
 
-        y = tf.one_hot(y, self.num_labels)
-        y = tf.squeeze(y)
+        # y = tf.one_hot(y, self.num_labels)
+        # y = tf.squeeze(y)
 
         x = tf.convert_to_tensor(input_dict["features"])
         x = tf.nn.embedding_lookup(self.embedding_matrix, x)
-        outputs = self.lstm1(x)
-        outputs = self.lstm2(outputs)
-        outputs = self.lstm3(outputs)
+        outputs = self.lstm(x)
+        # outputs = self.lstm1(x)
+        # outputs = self.lstm2(outputs)
+        # outputs = self.lstm3(outputs)
 
-        logits = self.linear2(self.linear1(tf.cast(outputs, dtype=tf.float32)))
+        logits = self.linear3(self.linear2(self.linear1(tf.cast(outputs, dtype=tf.float32))))
         y_pred = tf.nn.softmax(logits)
-        loss = tf.nn.softmax_cross_entropy_with_logits(y, logits)
+        loss = tf.keras.losses.sparse_categorical_crossentropy(y, y_pred)
+        loss = tf.reduce_sum(loss)
 
         return_dict = {"loss": loss, "y_pred": y_pred}
         return return_dict

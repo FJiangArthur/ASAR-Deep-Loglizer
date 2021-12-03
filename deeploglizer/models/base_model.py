@@ -10,7 +10,6 @@ from sklearn.metrics import accuracy_score, f1_score, recall_score, precision_sc
 
 from deeploglizer.common.utils import set_device, tensor2flatten_arr
 
-
 class Embedder(nn.Module):
     def __init__(
         self,

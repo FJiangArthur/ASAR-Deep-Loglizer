@@ -41,7 +41,7 @@ class LSTM(tf_BasedModel):
             gpu=gpu,
             **kwargs
         )
-        num_labels = meta_data["num_labels"]
+        self.num_labels = meta_data["num_labels"]
         self.feature_type = feature_type
         self.label_type = label_type
         self.hidden_size = hidden_size
@@ -54,10 +54,12 @@ class LSTM(tf_BasedModel):
         self.linear2 = Dense(
             self.hidden_size * self.num_directions, activation=None,
         )
+        self.linear3 = Dense(self.num_labels, activation=None)
         self.lstm = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(self.hidden_size))
 
 
     def call(self, input_dict):
+        y = None
         if self.label_type == "anomaly":
             y = tf.convert_to_tensor(input_dict["window_anomalies"])
         elif self.label_type == "next_log":
@@ -67,9 +69,12 @@ class LSTM(tf_BasedModel):
         x = tf.nn.embedding_lookup(self.embedding_matrix, x)
         outputs = self.lstm(x)
 
-        logits = self.linear2(self.linear1(tf.cast(outputs, dtype=tf.float32)))
+        logits =self.linear3(self.linear2(self.linear1(tf.cast(outputs, dtype=tf.float32))))
         y_pred = tf.nn.softmax(logits)
-        loss = tf.nn.softmax_cross_entropy_with_logits(y_pred, logits)
+
+        y = tf.one_hot(y, self.num_labels)
+        y = tf.squeeze(y)
+        loss = tf.nn.softmax_cross_entropy_with_logits(y, logits)
 
         return_dict = {"loss": loss, "y_pred": y_pred}
         return return_dict
