@@ -95,7 +95,7 @@ class VAE_LSTM(tf_BasedModel):
         self.lstm = tf.keras.layers.LSTM(self.hidden_size)
 
         self.linear1 = Dense(
-            self.hidden_size // 2, activation='relu')
+            self.hidden_size // 2)
         self.linear2 = Dense(
             self.num_labels, activation=None,
         )
@@ -111,6 +111,7 @@ class VAE_LSTM(tf_BasedModel):
         y = tf.squeeze(y)
 
         x = tf.convert_to_tensor(input_dict["features"])
+
         x = tf.nn.embedding_lookup(self.embedding_matrix, x)
         x = self.encoder(x)
         x = reparametrize(self.mu_layer(x), self.logvar_layer(x))
