@@ -1,0 +1,7 @@
+{
+    "label_file": "../data/Intrepid/binary_label.csv",
+    "log_file": "../data/Intrepid/structured_log.csv",
+    "random_sessions": true,
+    "test_ratio": 0.2,
+    "train_anomaly_ratio": 0.2
+}
