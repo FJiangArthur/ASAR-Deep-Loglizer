@@ -40,7 +40,7 @@ def reparametrize(mu, logvar):
     ################################################################################################
     return z
 
-class LSTM(tf_BasedModel):
+class VAE_LSTM(tf_BasedModel):
     def __init__(
         self,
         meta_data,

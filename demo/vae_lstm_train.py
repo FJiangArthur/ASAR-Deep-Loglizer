@@ -6,7 +6,7 @@ sys.path.append("../")
 import argparse
 
 import tensorflow as tf
-from models.vae_lstm import LSTM
+from models.vae_lstm import VAE_LSTM
 
 from deeploglizer.common.preprocess import FeatureExtractor
 from deeploglizer.common.dataloader import load_sessions
@@ -127,7 +127,7 @@ if __name__ == "__main__":
     emb_dimension = 128
 
     num_labels = ext.meta_data['num_labels']
-    model = LSTM(meta_data=ext.meta_data, batch_sz=curr_batch_size, model_save_path=model_save_path, **params)
+    model = VAE_LSTM(meta_data=ext.meta_data, batch_sz=curr_batch_size, model_save_path=model_save_path, **params)
 
     eval_results = model.fit(
         train_loader = dataset_train,
