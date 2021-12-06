@@ -18,7 +18,7 @@ parser.add_argument("--train_anomaly_ratio", default=0.2, type=float)
 params = vars(parser.parse_args())
 
 data_name = f'intrepid_ras_{params["train_anomaly_ratio"]}_tar'
-data_dir = "../data/processed/Intrepid_RAS"
+data_dir = "../data/processed/Intrepid_RAS_Binary_Labels"
 
 params = {
     # "log_file": "../data/HDFS/HDFS.log_structured.csv",

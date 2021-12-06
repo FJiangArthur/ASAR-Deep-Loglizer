@@ -57,7 +57,7 @@ params = vars(parser.parse_args())
 model_save_path = dump_params(params)
 
 class tf_data_generator(tf.keras.utils.Sequence):
-        def __init__(self, session_dict, batch_size, feature_type="semantics", shuffle=True):
+        def __init__(self, session_dict, batch_size, feature_type="sequentials", shuffle=True):
             self.shuffle = shuffle,
             self.max_input_size = 0
             self.batch_size = batch_size,

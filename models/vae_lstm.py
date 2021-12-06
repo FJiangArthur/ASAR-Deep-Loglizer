@@ -52,7 +52,7 @@ class VAE_LSTM(tf_BasedModel):
         use_attention=False,
         embedding_dim=16,
         model_save_path="./lstm_models",
-        feature_type="sequentials",
+        feature_type="semantics",
         label_type="next_log",
         eval_type="session",
         topk=5,

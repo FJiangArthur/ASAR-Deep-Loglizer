@@ -1,0 +1,7 @@
+{
+    "label_file": "/Users/artjiang/Documents/2470/Parser-N-Analyzer-for-Intrepid-RAS-log-Dataset/Intrepid_RAS_0901_0908_binary_labels.csv",
+    "log_file": "/Users/artjiang/Documents/2470/Parser-N-Analyzer-for-Intrepid-RAS-log-Dataset/Intrepid_RAS_0901_0908_structured.csv",
+    "random_sessions": true,
+    "test_ratio": 0.2,
+    "train_anomaly_ratio": 0.2
+}

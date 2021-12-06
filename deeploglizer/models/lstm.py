@@ -15,7 +15,6 @@ class Attention(nn.Module):
 
     def forward(self, lstm_input):
         input_tensor = lstm_input.transpose(1, 0)  # f x b x d
-
         input_tensor = (
             torch.bmm(input_tensor, self.atten_w) + self.atten_bias
         )  # f x b x out

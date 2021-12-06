@@ -7,9 +7,7 @@ from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Dense, Flatten, Reshape, ReLU
 from tensorflow.math import exp, sqrt, square
 
-
 NOISE_DIM = 96
-
 
 def sample_noise(batch_size: int, dim: int) -> tf.Tensor:
     return tf.random.uniform(shape=(batch_size, dim), minval=-1, maxval=1)

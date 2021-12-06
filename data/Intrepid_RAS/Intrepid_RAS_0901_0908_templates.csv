@@ -1,0 +1,304 @@
+EventId,EventTemplate,Occurrences
+91d905c3,MESSAGE,1
+ebfea9a2,ECC-correctable chipkill error: DDR Controller  failing SDRAM address  chipkill location  either X8 compute DRAM chip  or ,551
+1055839f,DDR controller  chipselect 0  symbol error count ,9433
+30865aa0,ECC-correctable single symbol error: DDR Controller  failing SDRAM address  BPC pin  transfer  bit  BPC module pin  compute trace  DRAM chip  DRAM pin ,5178
+c3c0975c,L3 Correctable error L3  group=0x00000007      ,4787
+d49bf2f6,ECC-correctable double symbol error: DDR Controller  failing SDRAM address  (1) BPC pin  transfer  bit  BPC module pin  compute trace  DRAM chip  DRAM pin  BPC pin  transfer  bit  BPC module pin  compute trace  DRAM chip  DRAM pin ,883
+f00d14ae,ECC-correctable double symbol error: DDR Controller  failing SDRAM address  (1) BPC pin  transfer  bit  BPC module pin  compute trace  DRAM chip  DRAM pin  symbol  mask ,96
+a15ab642,DDR controller  chipselect 0 chipkill error count ,1805
+26e2c248,DDR Redundant Bit Steering activated on bit  chipselect 0x00000000; controller ,988
+5d1c61ff,Software detected a burst of similar RAS events and compressed them. There were  similar events detected for message  ,5828
+db707c0a,A DMA unit reception FIFO is full. This is a recoverable error; but performance might be improved by increasing the FIFO size (via environment variable DCMF_RECFIFO=size-in-bytes) or be checking the DMA FIFOs more often. Additional details: 1) torus location is  2) Packet PID is  3) rFIFO bit mask is ,12420
+4a288344,Error 32 writing message 2 to the data stream.,2
+9965a5d6,ECC-correctable double symbol error: DDR Controller  failing SDRAM address  (1) symbol  mask 0x0; (2) BPC pin  transfer  bit  BPC module pin  compute trace  DRAM chip  DRAM pin ,79
+d1fcf1e8,Error  reading message  from  stream.,23
+8434651c,L1  cache parity error has occurred,508
+91b62f69,L1  cache parity error has occurred in TAG bit   ,58671
+2058d945,Correctable receiver errors: Node  had  correctable errors in the  direction,154
+2ff95668,Correctable sender retransmissions: Node  had  retransmissions in the  direction,105
+8adb1f08,Torus Bad Packet Capture Unit Found a multiple bit error in a packet; potential for CRC escape,2137
+a5c39180,Torus Bad Packet Capture Unit Error: error in capture unit,13
+a9e80ce3,Torus Bad Packet Capture Unit Found a single bit error in a packet,22
+5a9603ab,Software detected a severe burst of similar RAS events and is halting. There were  similar events detected for message  ,123
+0e24a76a,Environment Monitor threshold warning (Power Calculation Error). Status=0x00000800 PTMON    1.2v Domain   1.8v Domain    watts ,126
+228c7f91,Node  exited for reason 1 and code  and there was error 32 sending a message to the control system.,523
+0d9577ec,There were  proxy processes that did not cleanly at the end of job ....,191
+178112f1,Collective network receiver link  has spent  cycles resynchronizing with the ,8
+bdba434e,L1 instruction cache parity error has occurred in the instruction word    TagLow=0x00000101   ,2
+30e268a3,DDR controller  symbol error count. Controller  chipselect 0 ,51038
+c9d26942,DDR controller chipkill error count. Controller  chipselect 0 ,6688
+a6baa7ec,DDR correctable chipkill error(s): DDR Controller  failing SDRAM address  chipkill location  either X8 compute DRAM chip  or ,2174
+1116bae8,DDR correctable single symbol error(s): DDR Controller  failing SDRAM address  BPC pin  transfer  bit  BPC module pin  compute trace  DRAM chip  DRAM pin ,72913
+f25b5000,E10000 network link has been lost.,646
+8caad884,DDR correctable double symbol error(s): DDR Controller  failing SDRAM address  (1) BPC pin  transfer  bit  BPC module pin  compute trace  DRAM chip  DRAM pin  BPC pin  transfer  bit  BPC module pin  compute trace  DRAM chip  DRAM pin ,11018
+d31fb0b9,A DMA unit reception FIFO is full. Automatic recovery occurs for this event; but performance might be improved by increasing the FIFO size (via environment variable DCMF_RECFIFO=size-in-bytes) or by checking the DMA FIFOs more often. Additional details: 1) torus location is  2) Packet PID is  3) rFIFO bit mask is  4) Current fifo size is 8388608 bytes.,8388
+734ddd07,DDR correctable double symbol error(s): DDR Controller  failing SDRAM address  (1) BPC pin  transfer  bit  BPC module pin  compute trace  DRAM chip  DRAM pin  symbol  mask ,477
+f0ac52bb,Spurious Ethernet device interrupt error.,163
+261e1e17,An oops has occurred.,334
+5663094d,A message of type 1 was expected when a message of type 8 was received on the control stream.,8
+db54590c,Insufficient memory to start application. Shared  Persistent size=0 Text  Text  Data  Data  Static TLB slots used for each process in this    ,1146
+bb832d52,Error 0  a message  the debugger pipe.,7
+5dc582d1,A DDR controller raised a machine check. DDR Controller 1; raised machine checks: MM Strobe Gate Machine Check; no address captured.,1
+c818a991,Spurious EMAC interrupt.,1
+6cb2d436,DDR redundant bit steering activated. Bit  chipselect  controller ,2488
+1c93e31e,A kernel panic has occurred.,1
+d9a8d1d1,DDR correctable double symbol error(s): DDR Controller  failing SDRAM address  (1) symbol  mask  (2) BPC pin  transfer  bit  BPC module pin  compute trace  DRAM chip  DRAM pin ,1198
+33f0d7d2,L3  correctable error.     Group=7 ,8287
+225616d2,Torus Bad Packet Capture unit : a single bit error has been detected in a packet. Error data: ,78
+57522729,Torus Bad Packet Capture unit error: packet size mismatch (probable CRC escape),102
+cc5a178a,Torus Bad Packet Capture unit: a multiple bit error has been detected in a packet. Error data: ,988
+deb49818,L1 data cache parity error,131
+9b3b92b4,DDR controller machine check. DDR Controller  raised machine checks: MM Strobe Gate Machine  no address captured.,32
+4d71117f,L1 instruction cache parity error,90
+4332fadc,L1 instruction cache parity error analysis: Tag bit   ,589013
+0c57ff36,L1 data cache parity error analysis: Data in byte  of the   ,26
+f9d87912,L1 instruction cache parity error analysis: instruction word    TagLow=0x00000101   ,4
+3c090ad2,MMCS detected      power module at location   type is ,17493
+d1d20d3a,A DMA unit reception FIFO is full. Automatic recovery occurs for this event but performance might be improved by increasing the FIFO size (via environment variable DCMF_RECFIFO=size-in-bytes) or by checking the DMA FIFOs more often. Additional details: 1) torus location is    2) Packet PID is  3) rFIFO bit mask is  4) Current fifo size is  bytes.,193979
+9828c0e3,MMCS detected an error in a power module at location  Error type is ,2542
+4eb961de,MMCS detected a warning condition in a bulk power module at location  Warning type is ,16672
+e9ddc55d,A script error has occurred :  failure in ...  ,3129
+d404075c,Collective network local FIFOs could not be cleared. Reception  headers=0x00000000 Injection payload=0x00000000 headers=0x00000000,59
+82a7c1cd,DDR Controller  failing SDRAM address  BPC pin  transfer  bit  BPC module pin  compute trace  DRAM chip  DRAM pin ,38826
+6798b787,Correctable errors (double symbol error) in DRAM occurred. DDR Controller  failing SDRAM address  (1) BPC pin  transfer  bit  BPC module pin  compute trace  DRAM chip  DRAM pin  BPC pin  transfer  bit  BPC module pin  compute trace  DRAM chip  DRAM pin ,4046
+bc7eeba7,DDR Controller  failing SDRAM address  chipkill location  either X8 compute DRAM chip  or ,1527
+83ca61ac,Correctable errors (double symbol error) in DRAM occurred. DDR Controller  failing SDRAM address  (1) symbol  mask 0x0 (2) BPC pin  transfer  bit  BPC module pin  compute trace  DRAM chip  DRAM pin ,348
+90f7bf6b,Global Barrier Timeout    ,3143
+70c8f2cb,L3 cache unit detected a correctable error. L31: correctable error detected in EDRAM bank  .,6
+0fa8b289,Correctable errors (double symbol error) in DRAM occurred. DDR Controller  failing SDRAM address  (1) BPC pin  transfer  bit  BPC module pin  compute trace  DRAM chip  DRAM pin  symbol  mask ,114
+a6769841,Service Action  started to service  by ,130
+8dcb1549,Service Action  turned off  ,120
+3762c58b,Successfully powered off this  card.,233
+074e32f5,Successfully powered off this card.,259
+3ec52da6,Successfully initialized this card.,249
+d52571cd,Service Action  completed on  by ,123
+2248a50a,Service Action  restarted  ,109
+4a1cf6bd,L2 snoop  parity.  group=0x00000004 ,3
+9ee35e29,Kill job ... timed out. Block freed.,841
+e50a126c,Correctable receiver errors: Node    had  correctable errors in the  direction,127805
+84162e9a,Correctable sender retransmissions: Node    had  retransmissions in the  direction,108380
+6f8009aa,Error occurred : Caused by Data Write PLB interrupt.,1
+5df0a4da,CIO service in process  received signal 11 with code 0x00000001 errno 0x00000000 address  instruction pointer  link register ,556
+4dd167e7,mcserver terminated      Recovery Action: BGPMaster will restart server in 20 seconds.,20
+014002fb,mmcs_server terminated      Recovery Action: BGPMaster will restart server in 20 seconds.,21
+20cf8d28,mcserver has been  ... --baselogdir ... --binpath ... --configpath ... --db2profile ... --dbproperties ...,47
+e766926a,mmcs_server has been  ... --baselogdir ... --binpath ... --configpath ... --db2profile ... --dbproperties ... --no-reconnect,12
+a1a61d8f,MMCS has been started: ... --useDatabase BGP --dbproperties ... --iolog ... --reconnect-blocks all --boot-timeout-and-free 30 --boot-timeout-node-multiplier 240 --no-reconnect,36
+e77728f9,Machine is ready for use.,25
+47055a64,The TNK diagnostic test has miscompared. Alloc_seed=0x1914CF24  ,3
+0ea440d7,Node System Halted has halted.,12775
+18224ba9,Error  writing message 2 to the data stream at location 1902.,533
+468af046,There were  proxy processes that did not end cleanly at the end of job ....,120
+6e6cfa1b,An oops has occurred : machine check sig 7     TRAP=0202  ,624354
+1c0f8554,A script error has occurred : mount of 172.17.5.1:... failed.,339
+c80be24a,An oops has occurred : kernel access of bad area sig 11     TRAP=0300  ,57
+bc3ed5c2,realtime_server terminated stopped by administrator. Recovery Action: administrator must restart server.,6
+ad45ab19,realtime_server has been started: ... --baselogdir ... --binpath ... --configpath ... --db2profile ... --dbproperties ...,33
+629730bd,Node  only wrote -1 bytes of a total  bytes to a core file error 4.,108
+f23666d6,The microloader is not reading its mailbox.,11
+02df8aca,Cannot boot block:  ,174
+f99700ac,Successfully powered off this Bulk Power Module card. : ,17
+fabde141,Service Action    is functional.,19
+3ad4078e,Successfully initialized this service card.,25
+591733da,TLB Entry  overlaps with entry  Details:  vs. ,15
+f3854d27,Error 28 creating message queue with key 24011 at location 406.,2
+96d398f2,L2 snoop cache parity.   group=0x00000004 ,5
+4eb84667,Internal diode temp for U05 is low: ,2
+ace8866c,An oops has occurred : Exception in kernel mode sig 5     TRAP=0700  DSISR=0200000,3253
+5dac549c,E10000 network link error.,34
+6a0315ab,TLB parity error (uncategorized),26
+95cde6e0,TLB Entry 0x00000000 ,26
+21520084,TLB Entry 0x00000001 0xFFFF0226-0xFFFF0107-0xC00F0503-0x00000000,26
+8e9b1c23,TLB Entry 0x00000002 0xFFFF422E-0xFFFF4307-0x000F051B-0x00000000,26
+cee15279,TLB Entry 0x00000003 ,26
+ae42cf6b,TLB Entry 0x00000004 0xFFFDC20D-0x10000106-0x000F051B-0x00000000,26
+3c602cfe,TLB Entry 0x00000005 0xFFFDD205-0x11000306-0x000F051B-0x00000000,26
+8f049796,TLB Entry 0x00000006 0xFFFD0222-0x00000306-0x000F051B-0x00000000,26
+fdeaca80,TLB Entry 0x00000007 ,26
+a68f5516,TLB Entry 0x00000008 ,26
+f15a2f55,TLB Entry 0x00000009 ,26
+f45b8f38,TLB Entry 0x0000000A ,26
+cd64d66b,TLB Entry 0x0000000B ,26
+693e1a12,TLB Entry 0x0000000C ,26
+449a3c05,TLB Entry 0x0000000D ,26
+390dea20,TLB Entry 0x0000000E ,26
+98e384b0,TLB Entry 0x0000000F ,26
+64e3cad8,TLB Entry 0x00000010 ,26
+6022ac40,TLB Entry 0x00000011 ,26
+0b4d5171,TLB Entry 0x00000012 ,26
+38be10dc,TLB Entry 0x00000013 ,26
+2724b4f8,TLB Entry 0x00000014 ,26
+91750a27,TLB Entry 0x00000015 ,26
+8b39f6f2,TLB Entry 0x00000016 ,26
+a5e4d71c,TLB Entry 0x00000017 ,26
+4fb9bd22,TLB Entry 0x00000018 ,26
+69b8ebdd,TLB Entry 0x00000019 ,26
+fc78393e,TLB Entry 0x0000001A ,26
+9973cc92,TLB Entry 0x0000001B ,26
+07f7c792,TLB Entry 0x0000001C ,26
+3a6482f8,TLB Entry 0x0000001D ,26
+406ee09d,TLB Entry 0x0000001E ,26
+f4282f3c,TLB Entry 0x0000001F ,26
+79712bdc,TLB Entry 0x00000020 ,26
+c4b6e5fc,TLB Entry 0x00000021 ,26
+b42038ef,TLB Entry 0x00000022 ,26
+ff41d3c5,TLB Entry 0x00000023 ,26
+66ca0537,TLB Entry 0x00000024 ,26
+cffa8234,TLB Entry 0x00000025 ,26
+730505af,TLB Entry 0x00000026 ,26
+16f3fda9,TLB Entry 0x00000027 ,26
+4461d99c,TLB Entry 0x00000028 ,26
+599ad369,TLB Entry 0x00000029 ,26
+11e93b0b,TLB Entry 0x0000002A ,26
+9a45f53b,TLB Entry 0x0000002B ,26
+d036114a,TLB Entry 0x0000002C ,26
+3eee1382,TLB Entry 0x0000002D ,26
+bd4166ab,TLB Entry 0x0000002E ,26
+596c3b4a,TLB Entry 0x0000002F ,26
+60ad9497,TLB Entry 0x00000030 ,26
+51362528,TLB Entry 0x00000031 ,26
+44cd0a63,TLB Entry 0x00000032 ,26
+1183be4e,TLB Entry 0x00000033 ,26
+93897b60,TLB Entry 0x00000034 ,26
+816a6103,TLB Entry 0x00000035 ,26
+98199c78,TLB Entry 0x00000036 ,26
+ef8528ab,TLB Entry 0x00000037 ,26
+dd9a6170,TLB Entry 0x00000038 ,26
+0fbf5eac,TLB Entry 0x00000039 0xE000029C-0x60000300-0xC0102207-0x00000000,26
+3a8fdfe1,TLB Entry 0x0000003A 0xD0000290-0x50000000-0xC0102207-0x00000000,26
+b678d3d4,TLB Entry 0x0000003B 0xC0000298-0x40000200-0xC0102207-0x00000000,26
+c18657b9,TLB Entry 0x0000003C 0xB000029C-0x30000300-0xC0102207-0x00000000,26
+f89b90e9,TLB Entry 0x0000003D 0xA0000294-0x20000100-0xC0102207-0x00000000,26
+0a8938c1,TLB Entry 0x0000003E 0x90000298-0x10000200-0xC0102207-0x00000000,26
+13cf1a6a,TLB Entry 0x0000003F 0x80000290-0x00000000-0xC0102207-0x00000000,26
+38e797e9,An attempt was made to use DMA injection counter 64 at torus location (2 0 0) but this counter is not enabled.,3
+3396764a,TLB parity error analysis: Entry     ,19
+2647401e,L3 machine check. Controller=0 group=7 status=0  L31=0x00000000,2
+f63a02ed,An illegal instruction was executed by the kernel. Signal=0x00000004 IP=0xFFF500A0 LR=0xFFF41358 MSR=0x00002000 DEAR=0x00000000 ESR=0x08000000,1
+ffa6a784,Service Action  on  was forced closed by by ,7
+01ebfcad,A memory  was attempted to an invalid address by the kernel. Signal=0x0000000B   MSR=0x00023200  ,261
+5bff1290,mmcs_server terminated stopped by administrator. Recovery Action: administrator must restart server.,1
+c1c26da4,MMCS has been started: ... --useDatabase BGP --dbproperties ... --iolog ... --reconnect-blocks all --boot-timeout-and-free 30 --boot-timeout-node-multiplier 240 --no-reconnect --reconnect-blocks all,12
+3e9932df,Insufficient memory error. Linux has insufficient free memory to satisfy a request for more memory.,318
+35e21e82,A Link Chip HSS built in self test failed: Port C HssbistStatus is  expected 0xffffe00000000000,23
+92b8a796,DDR Controller 1 bit  bad location: BPC pin  BPC module pin  compute trace  DRAM chip  DRAM pin ,34
+e211894e,This error is likely a hardware error. The following details will be useful for Blue Gene support: Torus coordinates=(2 7 4) DCR 0xD93=0x80000000 DCR 0xD97=0x00001A18 DCR 0xD98=0x0000180C DCR 0xD99=0x00002A18 DCR 0xD9A=0x0000280C DCR 0xD9B=0x80800000 DCR 0xD9C=0x4A000000 DCR 0xD9D=0x02080900,1
+5b61e06b,A Link Chip port is using a spare channel to circumvent a faulty synchronous wire. Port =  Position =  Spare = ,577
+3cf73f0e,Torus Coords    Probable Software Error(s):  Probable Hardware Error(s): 1,2
+fa45cc33,Correctable torus hdrfull errors:  correctable errors were detected at location   ,1532
+774a7ef4,Checksum miscompare in  repetition  test  Checksum is  but should be ,88
+c72b2d56,mmcs_server has been restarted: ... --baselogdir ... --binpath ... --configpath ... --db2profile ... --dbproperties ... --no-reconnect --reconnect-blocks all,10
+332c20e0,BGPMaster has been stopped,25
+428d4f91,BGPMaster has been started: .... --consoleip 127.0.0.1 --consoleport 32035 --configpath ... --configfile bgpmaster.init --autorestart y --dbproperties ... --baselogdir ...,27
+b5609f89,mmcs_server has been started: ... --baselogdir ... --binpath ... --configpath ... --db2profile ... --dbproperties ...,27
+78da6b9d,mpirund has been started: ... --baselogdir ... --binpath ... --configpath ... --db2profile ... --dbproperties ...,27
+dfca9024,navigator_server has been started: ... --baselogdir ... --binpath ... --configpath ... --db2profile ... --dbproperties ...,29
+3ea4f32e,submit_server has been started: ... --baselogdir ... --binpath ... --configpath ... --db2profile ... --dbproperties ...,28
+8f72b7a1,Unable to get this processor cards nominal PTMON temperature: rc=0xFFFFFFFE,2
+a4388910,An error(s) was detected by the Clock card : Error=Loss of reference input,3
+f75ae373,DMA unit  counter  has underflowed at torus location   ,4032
+88a06770,An attempt was made to send a DMA message of length 0 at torus location    The FIFO ID was ,385
+02720425,Lbist miscompare for MISR0  !=  on R14-M0-N03-J09 for domain PPC 450 core  clock_x1,8
+4eb30425,Lbist failed in mode  in clock domain PPC 450 core  clock_x1 on R14-M0-N03-J09,8
+445791c6,Lbist miscompare for MISR0 0x475f3f29231d0ad0 != 0xaf8c3e4819fee6f0 on R14-M0-N03-J09 for domain L2 Cache... Filter... Stop Unit clock_x1,1
+be74e2ce,Lbist failed in mode 4 in clock domain L2 Cache... Filter... Stop Unit clock_x1 on R14-M0-N03-J09,1
+101514a3,Lbist miscompare for MISR0 0xe01bc88371d9e414 != 0x2e55ab2a873360d8 on R14-M0-N03-J09 for domain L2 Cache... Filter... Arbiter... Controller... Interface... clock_x2,1
+9993a5d5,Lbist failed in mode 5 in clock domain L2 Cache... Filter... Arbiter... Controller... Interface... clock_x2 on R14-M0-N03-J09,1
+71c69ae4,Lbist miscompare for MISR0  != 0x678f3e2cbf516880 on R14-M0-N03-J09 for domain  ,4
+583d946b,Lbist failed in mode  in clock domain   on R14-M0-N03-J09,4
+e925a75f,Lbist miscompare for   !=  on  for domain Master DCR... and Collective DCR... OPB Slv... Sync clock_x8,2
+552abc14,Lbist failed in mode 7 in clock domain Master DCR... and Collective DCR... OPB Slv... Sync clock_x8 on ,2
+017d4965,Lbist miscompare for MISR0  !=  on R14-M0-N03-J09 for domain   ,6
+721cdd2f,Lbist failed in mode  in clock domain    on R14-M0-N03-J09,6
+875cf3c8,Lbist miscompare for   !=  on  for domain    ,198
+5cfbd59e,Lbist failed in mode  in clock domain     on ,30
+da356060,A DMA message sent by node   0x00000003) failed to be received in the  direction by node    0x02DC6C00 bytes of data did not make it.,24
+2ca3ee52,Correctable torus reception SRAM errors:  correctable errors were detected at location 0x00000005 0x0000001F 0x00000009.,210
+e04df944,DDR controller machine check. DDR Controller  raised machine checks: MM   Error no address captured.,9
+5f8afbe7,Service Action  on  failed with error code -221. Errors occurred updating the hardware associated with  in the database. Examine the log file ... for information related to the failure.,2
+0d01041d,navigator_server terminated stopped by administrator. Recovery Action: administrator must restart server.,2
+0beb656d,Had to retry before this card would start. : NumberOfRetries=1,15
+5bcac3a7,A processor cards vpd within this node card does not contain an expected keyword : ProcCard=R24-M1-N05-J18 sVpdKey=U0,1
+efd4c18a,The fan speed for location R40-M0-A4 fan number 1 is out of the range of expected values. Expected speed is  RPM and the actual speed is  RPM.,1412
+0d11b520,1.5 power rail is high 4.152.,1
+127a723e,1.8 power rail is  ,33
+46f86345,3.3 power rail is high 4.386.,1
+4c231aa0,5.0 power rail is  ,17
+48877bb9,Service Action  has prepared the  in  to be serviced.,8
+1dbf07b3,Successfully prepared this Fan Module to be serviced. : FanModule=R40-M0-A4,2
+965f3074,MMCS could not contact  at location: ,13671
+e5c51e8a,Could not write a fan module register (desired speed) :  ,21
+2087ac7d,MMCS detected an error in a power module at location R35-M0-N11-P7. Error type is general power module fault.,153
+69d9f73a,ela_server has been  ... --baselogdir ... --binpath ... --configpath ... --db2profile ... --dbproperties ...,22
+1fe4ec75,ela_server terminated      within a minute of startup. Recovery Action: Administrator must restart server.,9
+a47ed4aa,MMCS detected an error in a bulk power module at location R17-B-P8. Error type is general bulk power module fault.,3299
+e4a92843,Unable to read bulk power modules   :  ,6
+48e5388c,ela_server terminated stopped by administrator. Recovery Action: administrator must restart server.,2
+83654b8b,ela_server terminated normally with exit code 0. Recovery Action: BGPMaster will restart server in 20 seconds.,3
+c5d2c14d,The global interrupt link test failed because the global interrupt status DCR register for  contained an incorrect value. Expected  but was actually  The failure occurred while the global interrupts were being propagated to the link cards but not while wrapping at the compute group or node card.,160
+800d7ff7,The mailbox command failed: cmd=0xFFFF ,536
+51bb9eec,Unable to send ELF Image CRCs to this node,512
+4a261bc9,An unsupported mailbox command was received from a node:  ,2
+419742b9,The mailbox write was not acknowledged. cmd=0x0000,40
+ba98dad1,The BPC Access Instruction Register is completely invalid:  ,8930
+8dc900ad,MMCS detected a voltage error on the card at location ,1621
+a14a66c3,The BPC Instruction Status Register had an error following a power-on reset: ,10555
+55c04800,A Link Chip did not indicate HSS Readys: HssStatus for ports C... = 0x0000000000000000,16
+9ea357c2,1.8vV power rail is low: 1.252V,1
+0254c727,1.5V power rail is low: 0.144V,1
+c5e7a590,1.2 power rail is low ,17
+c0d1f2cc,This cards VPD has incorrect data :  sChipEcid=0000000000000000000000000000,24
+e3011ebc,1.8 Power Rail is low ,8
+8fbedf47,ACCESS_SCOM_STAT:  SCDATAGD never  during  sequence on ,144
+239e912a,ACCESS_SCOM_STAT:  SCIDLE on ,72
+2f94dbce,ACCESS_SCOM_STAT: ffffffff The remaining sequencer bits on ,24
+ce654518,ECID: -no data- is invalid on ,24
+8303c4bc,ACCESS: 8840fefe    on ,72
+36c40960,ACCESS: 8840fefe SCom Attention on ,24
+9aa17980,Lbist Scom register  not cleared on ,26
+1c0ae793,HBIST loopback shows error on R35-M1-L0-U05 port A expected 0xffffe00000000000 actual 0x0000000000000000. Channels failed: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18.,1
+a2706e25,HBIST loopback shows error on R35-M1-L1-U00 port A expected 0xffffe00000000000 actual 0xffffeffff4000000. Unable to decode any failing channels.,1
+52fd66ad,Invalid JTAG id  on ,1040
+9b9fedae,The global interrupt test  has failed because clock start error on  has failed.,32
+f5d7ad83,A processor cards VPD has incorrect data :   ,553
+9318227b,Service Action  turned off all  in ,12
+0062d5d3,Successfully prepared this service card for service.,6
+eee7348e,Broken power module :  rc=0xFFFFFFFF,130
+18c9a27e,Link card did not become operational:  status=0xffffffff,5
+fb284353,Initialization of this card failed : iRc=-1,17
+dc0f9aab,The  volt rail voltage is in error.,32
+128e3bb4,Service Action 4334 on R35-M1 failed with error code 16. All node cards in midplane R35-M1 could not be restarted. See log for details. Examine the log file ... for information related to the failure.,1
+4bada7db,Service Action  restarted all  in ,6
+189361dd,Service Action  restarted ServiceCard in ,3
+ee7d089a,SerDes Training Failure on   receiver. Location:   ,21
+69649ea2,SerDes training failure at location   ,17
+b87e38e4,The global interrupt test  has failed because the setting of the interrupt  for  has failed.,5
+46a68574,The card was not visible after reloading its firmware,3
+0df34de8,Missing bulk power module : BPM=R36-B-P8,1
+4ab807c6,submit_server terminated stopped by administrator. Recovery Action: administrator must restart server.,1
+514b2bae,DMA SRAM correctable error over threshold (Local FIFO SRAM 1) Internal Register $(DCR) : $(VALUE) Threshold: $(THRESHOLD),1
+ff539a3b,Unable to reset Power Module faults :  ,214
+d3000fff,Unable to power on node card :   ,201
+6ca0db40,Power didnt come on problem writing to power supply control register: rc=-6,32
+58011097,Unable to determine voltage requirements for this node card: Reason=Unable to read processor cards VPD readProcessorCardVpd failed rc=-1,1
+09d54b22,Problem reading the sensors: ,987
+84137178,Can no longer talk to this iCon.,990
+0b4fa2d8,A Link Chip byte alignment procedure failed: C ParStat1 = 0x2000000000000000 - bad wire... = 0,3
+4250983d,The HSS training pattern messages were not received from the nodes being booted on this node card.,3279
+297dbd7f,The global interrupts for this node was not the expected value.,136
+cb0f87f9,IOCard  has a duplicate MAC address of ,2
+8594b905,A kernel panic has occurred : machine check,1
+f9440b30,Problem reading the BPC Instruction Status Register: rc=-6,66
+f8ad4fef,Broken FATAL  DefaultControlEventListener   All the bulk power modules for this midplane are incoherent apparently the i2c bus is broken,40
+51fed634,Unable to configure this cards global interrupts for Up OR Domain: rc=-6,285
+c5f3a842,The SRAM write failed: rc=-6,2
+8b464be4,Problem lowering the PGOOD signal: rc=-6,2
+845e249d,Detected that an over-temperature condition has previously occurred on this card (the card was powered off at that time). ADT7461_ASIC_ERROR=0x20 ADT7461_INTERNAL_ERROR=0x0 WatchdogError=0x0,1
+d1795305,MMCS detected a temperature reading at location R00-M1-L2 that is out of the range of expected values. The temperature reading was 32.,1
+4050c9ca,The global interrupt test  has failed because  has a bad initialization.,5
+5a5fff63,A kernel panic has occurred : kernel access of bad area,2
+f869983e,Bootloader image CRC check failed. LR=0xFFFFC774 MCSR=0x00000000 MCSRR0=0x00000000 CSRR0=0x00000000 SRR0=0xFFFFFD00 DEAR=0x00000000 ESR=0x00000000,1
+704843d3,MMCS detected an error in a bulk power module at location R36. This is a fatal condition due to the presence of other failed bulk power modules in this rack. The rack is being partially or completely disabled.,132
+d9f9cd35,An ECC uncorrectable error occurred in DRAM. DDR Controller 0 no address captured.,101
+f4b6eeda,DDR controller machine check. DDR Controller 0 raised machine checks: MM Unit Uncorrectable Error MM Address Parity Error no address captured.,15
