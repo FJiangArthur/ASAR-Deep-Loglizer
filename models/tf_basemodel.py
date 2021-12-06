@@ -131,6 +131,8 @@ class tf_BasedModel(tf.keras.Model):
         os.makedirs(model_save_path, exist_ok=True)
         self.model_save_file = model_save_path
 
+        self.vocab_size = meta_data["vocab_size"]
+
         self.cp_callback = tf.keras.callbacks.ModelCheckpoint(
             filepath=self.model_save_file,
             verbose=1,
@@ -166,13 +168,14 @@ class tf_BasedModel(tf.keras.Model):
                 item_dict['window_labels'].append(items['window_labels'])
                 item_dict['window_anomalies'].append(items['window_anomalies'])
 
-            item_dict['session_idx'] = np.array(item_dict['session_idx']).reshape((self.batch_sz, -1))
+            item_dict['session_idx'] = np.array(item_dict['session_idx']).reshape((self.batch_sz,)).tolist()
             item_dict['features'] = np.array(item_dict['features']).reshape((self.batch_sz, -1))
-            item_dict['window_labels'] = np.array(item_dict['window_labels']).reshape((self.batch_sz, -1))
-            item_dict['window_anomalies'] = np.array(item_dict['window_anomalies']).reshape((self.batch_sz, -1))
+            item_dict['window_labels'] = np.array(item_dict['window_labels']).reshape((self.batch_sz,)).tolist()
+            item_dict['window_anomalies'] = np.array(item_dict['window_anomalies']).reshape((self.batch_sz,)).tolist()
 
-            return_dict = self.call(batch_list)
-            y_prob, _y_pred = return_dict["y_pred"].max(dim=1)
+            return_dict = self.call(item_dict)
+            _y_pred = tf.math.argmax(return_dict["y_pred"],axis=1).numpy().tolist()
+            y_prob = tf.gather(return_dict["y_pred"], indices=_y_pred, axis=1).numpy().tolist()
             y_pred.append(_y_pred)
             store_dict["session_idx"].extend(
                 item_dict["session_idx"]
@@ -180,7 +183,8 @@ class tf_BasedModel(tf.keras.Model):
             store_dict["window_anomalies"].extend(
                 item_dict["window_anomalies"]
             )
-            store_dict["window_preds"].extend(y_pred)
+            store_dict["window_preds"].extend(_y_pred)
+            store_dict["window_probs"].extend(y_prob)
 
         infer_end = time.time()
 
@@ -190,13 +194,13 @@ class tf_BasedModel(tf.keras.Model):
         store_df = pd.DataFrame(store_dict)
         use_cols = ["session_idx", "window_anomalies", "window_preds"]
         session_df = store_df[use_cols].groupby("session_idx", as_index=False).sum()
-        pred = (session_df[f"window_preds"] > 0).astype(int)
-        y = (session_df["window_anomalies"] > 0).astype(int)
+        pred = list(map(int,(session_df[f"window_preds"] > 0).tolist()))
+        y = list(map(int, (session_df["window_anomalies"] > 0).tolist()))
 
         eval_results = {
-            "f1": f1_score(y, pred),
-            "rc": recall_score(y, pred),
-            "pc": precision_score(y, pred),
+            "f1": f1_score(y, pred, average='weighted', labels=np.unique(y)),
+            "rc": recall_score(y, pred, average='weighted', labels=np.unique(y)),
+            "pc": precision_score(y, pred, average='weighted', labels=np.unique(y)),
             "acc": accuracy_score(y, pred),
         }
         logging.info({k: f"{v:.3f}" for k, v in eval_results.items()})
@@ -280,11 +284,11 @@ class tf_BasedModel(tf.keras.Model):
         for topk in range(1, self.topk + 1):
             pred = (session_df[f"window_pred_anomaly_{topk}"] > 0).astype(int)
             y = (session_df["window_anomalies"] > 0).astype(int)
-            window_topk_acc = 1 - store_df["window_anomalies"].sum() / len(store_df)
+            window_topk_acc = 1 - (store_df["window_anomalies"].sum() / len(store_df))
             eval_results = {
-                "f1": f1_score(y, pred),
-                "rc": recall_score(y, pred),
-                "pc": precision_score(y, pred),
+                "f1": f1_score(y, pred, average='weighted', labels=np.unique(y)),
+                "rc": recall_score(y, pred, average='weighted', labels=np.unique(y)),
+                "pc": precision_score(y, pred, labels=np.unique(y)),
                 "top{}-acc".format(topk): window_topk_acc,
             }
             logging.info({k: f"{v:.3f}" for k, v in eval_results.items()})

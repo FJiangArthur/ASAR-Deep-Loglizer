@@ -17,15 +17,15 @@ parser = argparse.ArgumentParser()
 ##### Model params
 parser.add_argument("--model_name", default="CNN", type=str)
 parser.add_argument("--hidden_size", default=128, type=int)
-parser.add_argument("--kernel_sizes", default="2 3 4", nargs="+")
-parser.add_argument("--embedding_dim", default=32, type=int)
+parser.add_argument("--kernel_sizes", default="1 1 1", nargs="+")
+parser.add_argument("--embedding_dim", default=128, type=int)
 
 ##### Dataset params
 parser.add_argument("--dataset", default="HDFS", type=str)
 parser.add_argument(
-    "--data_dir", default="../data/processed/HDFS_100k/hdfs_1.0_tar", type=str
+    "--data_dir", default="../data/processed/Intrepid_RAS_Binary_Labels/intrepid_ras_0.2_tar", type=str
 )
-parser.add_argument("--window_size", default=10, type=int)
+parser.add_argument("--window_size", default=100, type=int)
 parser.add_argument("--stride", default=1, type=int)
 
 ##### Input params
@@ -44,7 +44,7 @@ parser.add_argument("--min_token_count", default=1, type=int)
 parser.add_argument("--epoches", default=100, type=int)
 parser.add_argument("--batch_size", default=1024, type=int)
 parser.add_argument("--learning_rate", default=0.01, type=float)
-parser.add_argument("--patience", default=3, type=int)
+parser.add_argument("--patience", default=30, type=int)
 
 ##### Others
 parser.add_argument("--random_seed", default=42, type=int)
