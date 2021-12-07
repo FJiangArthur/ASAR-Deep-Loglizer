@@ -97,7 +97,7 @@ class AutoEncoder(tf_BasedModel):
             Dense(self.hidden_size, activation="relu"),
             Dense(self.hidden_size // 2, activation="relu"),
             Dense(self.hidden_size * self.num_directions, activation="relu"),
-            Dense(self.num_labels, activation="relu"),
+            Dense(self.num_labels, activation="sigmoid"),
         ])
 
     def call(self, input_dict):
@@ -116,10 +116,12 @@ class AutoEncoder(tf_BasedModel):
         logvar = self.logvar_layer(encoded)
         y_pred = self.decoder(reparametrize(mu, logvar))
 
-        bce_fn = tf.keras.losses.BinaryCrossentropy(from_logits=False, reduction=tf.keras.losses.Reduction.SUM_OVER_BATCH_SIZE)
+        bce_fn = tf.keras.losses.BinaryCrossentropy(from_logits=False)
 
         loss = bce_fn(y, y_pred) * y_pred.shape[-1]
+        
 
         return_dict = {"loss": loss, "y_pred": y_pred}
+        # print(return_dict)
         return return_dict
 
