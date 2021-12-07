@@ -116,7 +116,7 @@ class AutoEncoder(tf_BasedModel):
         logvar = self.logvar_layer(encoded)
         y_pred = self.decoder(reparametrize(mu, logvar))
 
-        bce_fn = tf.keras.losses.BinaryCrossentropy(from_logits=True, reduction=tf.keras.losses.Reduction.SUM_OVER_BATCH_SIZE)
+        bce_fn = tf.keras.losses.BinaryCrossentropy(from_logits=False, reduction=tf.keras.losses.Reduction.SUM_OVER_BATCH_SIZE)
 
         loss = bce_fn(y, y_pred) * y_pred.shape[-1]
 
