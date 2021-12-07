@@ -130,7 +130,7 @@ if __name__ == "__main__":
     model = AutoEncoder(
         meta_data=ext.meta_data, batch_sz=curr_batch_size, model_save_path=model_save_path, **params
     )
-    model.compile(loss=tf.keras.losses.BinaryCrossentropy(from_logits=False, reduction=tf.keras.losses.Reduction.SUM_OVER_BATCH_SIZE),
+    model.compile(loss=tf.keras.losses.BinaryCrossentropy(from_logits=True, reduction=tf.keras.losses.Reduction.SUM_OVER_BATCH_SIZE),
                   optimizer=tf.keras.optimizers.Adam(1e-4),
                   metrics=['accuracy'])
 
