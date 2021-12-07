@@ -6,7 +6,7 @@ sys.path.append("../")
 import argparse
 
 import tensorflow as tf
-from models.vae import VariableAutoEncoder
+from models.vae_new import AutoEncoder
 
 from deeploglizer.common.preprocess import FeatureExtractor
 from deeploglizer.common.dataloader import load_sessions, log_dataset
@@ -127,7 +127,7 @@ if __name__ == "__main__":
     emb_dimension = 128
 
     num_labels = ext.meta_data['num_labels']
-    model = VariableAutoEncoder(
+    model = AutoEncoder(
         meta_data=ext.meta_data, batch_sz=curr_batch_size, model_save_path=model_save_path, **params
     )
     model.compile(loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
