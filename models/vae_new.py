@@ -1,10 +1,11 @@
-import tensorflow as tf
 from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Dense, Flatten, Reshape, ReLU
 from tensorflow.math import exp, sqrt, square
 from models.tf_basemodel import tf_BasedModel
-
-
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+import tensorflow as tf
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 def reparametrize(mu, logvar):
     """
     Differentiably sample random Gaussian data with specified mean and variance using the
@@ -96,7 +97,7 @@ class AutoEncoder(tf_BasedModel):
             Dense(self.hidden_size, activation="relu"),
             Dense(self.hidden_size // 2, activation="relu"),
             Dense(self.hidden_size * self.num_directions, activation="relu"),
-            Dense(self.num_labels, activation="softmax"),
+            Dense(self.num_labels, activation="sigmoid"),
         ])
 
     def call(self, input_dict):
@@ -115,10 +116,12 @@ class AutoEncoder(tf_BasedModel):
         logvar = self.logvar_layer(encoded)
         y_pred = self.decoder(reparametrize(mu, logvar))
 
-        bce_fn = tf.keras.losses.BinaryCrossentropy(from_logits=False,reduction=tf.keras.losses.Reduction.SUM)
+        bce_fn = tf.keras.losses.BinaryCrossentropy(from_logits=False)
 
         loss = bce_fn(y, y_pred) * y_pred.shape[-1]
+        
 
         return_dict = {"loss": loss, "y_pred": y_pred}
+        # print(return_dict)
         return return_dict
 
