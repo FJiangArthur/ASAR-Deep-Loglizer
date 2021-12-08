@@ -5,6 +5,7 @@ import sys
 sys.path.append("../")
 import argparse
 
+import tensorflow as tf
 from models.data_generator import tf_data_generator
 from models.cnn import CNN
 from deeploglizer.common.dataloader import load_sessions, log_dataset
@@ -23,7 +24,8 @@ parser.add_argument("--embedding_dim", default=128, type=int)
 ##### Dataset params
 parser.add_argument("--dataset", default="HDFS", type=str)
 parser.add_argument(
-    "--data_dir", default="../data/processed/Intrepid_RAS_Binary_Labels/intrepid_ras_0.2_tar", type=str
+    # "--data_dir", default="../data/processed/Intrepid_RAS_Binary_Labels/intrepid_ras_0.2_tar", type=str
+    "--data_dir", default="../data/processed/HDFS_100k/hdfs_0.0_tar", type=str
 )
 parser.add_argument("--window_size", default=100, type=int)
 parser.add_argument("--stride", default=1, type=int)
@@ -44,7 +46,7 @@ parser.add_argument("--min_token_count", default=1, type=int)
 parser.add_argument("--epoches", default=100, type=int)
 parser.add_argument("--batch_size", default=1024, type=int)
 parser.add_argument("--learning_rate", default=0.01, type=float)
-parser.add_argument("--patience", default=30, type=int)
+parser.add_argument("--patience", default=1, type=int)
 
 ##### Others
 parser.add_argument("--random_seed", default=42, type=int)
@@ -91,5 +93,5 @@ if __name__ == "__main__":
         test_loader=dataset_test,
         epoches=params["epoches"],
     )
-
+    tf.keras.utils.plot_model(model)
     dump_final_results(params, eval_results, model)

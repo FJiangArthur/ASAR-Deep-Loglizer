@@ -3,3 +3,5 @@ numpy
 scikit-learn
 pandas
 tensorflow >= 2.6.0
+pydot
+graphviz
