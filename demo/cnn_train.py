@@ -4,9 +4,9 @@
 import sys
 sys.path.append("../")
 import argparse
-from torch.utils.data import DataLoader
 
-from deeploglizer.models import CNN
+from models.data_generator import tf_data_generator
+from models.cnn import CNN
 from deeploglizer.common.dataloader import load_sessions, log_dataset
 from deeploglizer.common.preprocess import FeatureExtractor
 from deeploglizer.common.utils import seed_everything, dump_final_results, dump_params
@@ -17,15 +17,15 @@ parser = argparse.ArgumentParser()
 ##### Model params
 parser.add_argument("--model_name", default="CNN", type=str)
 parser.add_argument("--hidden_size", default=128, type=int)
-parser.add_argument("--kernel_sizes", default="2 3 4", nargs="+")
-parser.add_argument("--embedding_dim", default=32, type=int)
+parser.add_argument("--kernel_sizes", default="1 1 1", nargs="+")
+parser.add_argument("--embedding_dim", default=128, type=int)
 
 ##### Dataset params
 parser.add_argument("--dataset", default="HDFS", type=str)
 parser.add_argument(
-    "--data_dir", default="../data/processed/HDFS_100k/hdfs_1.0_tar", type=str
+    "--data_dir", default="../data/processed/Intrepid_RAS_Binary_Labels/intrepid_ras_0.2_tar", type=str
 )
-parser.add_argument("--window_size", default=10, type=int)
+parser.add_argument("--window_size", default=100, type=int)
 parser.add_argument("--stride", default=1, type=int)
 
 ##### Input params
@@ -44,7 +44,7 @@ parser.add_argument("--min_token_count", default=1, type=int)
 parser.add_argument("--epoches", default=100, type=int)
 parser.add_argument("--batch_size", default=1024, type=int)
 parser.add_argument("--learning_rate", default=0.01, type=float)
-parser.add_argument("--patience", default=3, type=int)
+parser.add_argument("--patience", default=30, type=int)
 
 ##### Others
 parser.add_argument("--random_seed", default=42, type=int)
@@ -64,35 +64,32 @@ if __name__ == "__main__":
     session_test = ext.transform(session_test, datatype="test")
 
     dataset_train = log_dataset(session_train, feature_type=params["feature_type"])
-    dataloader_train = DataLoader(
-        dataset_train, batch_size=params["batch_size"], shuffle=True, pin_memory=True
-    )
 
     dataset_test = log_dataset(session_test, feature_type=params["feature_type"])
-    dataloader_test = DataLoader(
-        dataset_test, batch_size=4096, shuffle=False, pin_memory=True
-    )
+    session_train = ext.fit_transform(session_train)
+    session_test = ext.transform(session_test, datatype="test")
+    dataset_train = tf_data_generator(session_train, feature_type=params["feature_type"],
+                                      batch_size=params["batch_size"], shuffle=True)
+    dataset_test = tf_data_generator(session_test, feature_type=params["feature_type"], batch_size=params["batch_size"],
+                                     shuffle=True)
 
-    model = CNN(meta_data=ext.meta_data, model_save_path=model_save_path, **params)
+    curr_batch_size = 1024
+
+    # ext.meta_data = {'num_labels': 14, 'vocab_size': 14}
+    max_input_senquence_len = dataset_train.max_input_size
+    feature_len = dataset_train.feature_len
+    hidden_size = 256
+    num_layers = 2
+    num_keys = ext.meta_data['vocab_size']
+    emb_dimension = 128
+
+    num_labels = ext.meta_data['num_labels']
+    model = CNN(meta_data=ext.meta_data, batch_sz=curr_batch_size, model_save_path=model_save_path, **params)
 
     eval_results = model.fit(
-        dataloader_train,
-        test_loader=dataloader_test,
+        train_loader=dataset_train,
+        test_loader=dataset_test,
         epoches=params["epoches"],
-        learning_rate=params["learning_rate"],
-    )
-
-    result_str = "\t".join(["{}-{:.4f}".format(k, v) for k, v in eval_results.items()])
-
-    key_info = [
-        "dataset",
-        "train_anomaly_ratio",
-        "feature_type",
-        "label_type",
-    ]
-
-    args_str = "\t".join(
-        ["{}:{}".format(k, v) for k, v in params.items() if k in key_info]
     )
 
     dump_final_results(params, eval_results, model)
