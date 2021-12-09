@@ -11,7 +11,7 @@ sys.path.append("../")
 import argparse
 
 from models.data_generator import tf_data_generator
-from models.gan import Discriminator, Generator, sample_noise
+from models.new_gan import Discriminator, Generator, sample_noise
 from deeploglizer.common.dataloader import load_sessions, log_dataset
 from deeploglizer.common.preprocess import FeatureExtractor
 from deeploglizer.common.utils import seed_everything, dump_final_results, dump_params
@@ -23,7 +23,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--model_name", default="Autoencoder", type=str)
 parser.add_argument("--hidden_size", default=128, type=int)
 parser.add_argument("--num_directions", default=2, type=int)
-parser.add_argument("--num_layers", default=1, type=int)
+parser.add_argument("--num_layers", default=3, type=int)
 parser.add_argument("--embedding_dim", default=32, type=int)
 
 ##### Dataset params
@@ -67,8 +67,7 @@ def optimize(tape: tf.GradientTape, model: tf.keras.Model, loss: tf.Tensor) -> N
     gan_optimizer.apply_gradients(zip(gradients, model.trainable_variables))
 
 
-def GAN_train(discriminator, generator, train_loader, noise_z,  epoches = 100, callbacks=None, test_loader=None):
-    noise_z_dict = {"features":noise_z}
+def new_GAN_train(discriminator, generator, train_loader,  epoches = 100, callbacks=None, test_loader=None):
     logging.info(
         "Start training on {} batches.".format(
             len(train_loader)
@@ -101,23 +100,29 @@ def GAN_train(discriminator, generator, train_loader, noise_z,  epoches = 100, c
             item_dict['window_labels'] = np.array(item_dict['window_labels']).reshape((discriminator.batch_sz, -1))
             item_dict['window_anomalies'] = np.array(item_dict['window_anomalies']).reshape((discriminator.batch_sz, -1))
 
+            y = tf.convert_to_tensor(item_dict['window_labels'], dtype='int32')
+            x = tf.convert_to_tensor(item_dict['features'], dtype='int32')
+
 
             with tf.GradientTape(persistent=True) as tape:
-                G_sample = generator.call(noise_z_dict)
+                # Generator Train
+                G_sample_fake = generator.call(x)
+                D_sample_fake = tf.reshape(discriminator.call(G_sample_fake), (-1, 1))
+                G_sample_real = y
+                g_loss = generator.loss_function(tf.cast(D_sample_fake, dtype='float32'), tf.zeros_like(D_sample_fake, dtype='float32'),
+                                                 tf.cast(G_sample_fake,dtype='float32'),  tf.cast(x, dtype='float32'))
 
-                logits_real = discriminator.call(item_dict)
-                logits_fake = discriminator({"features":G_sample})
 
-                y = None
-                if train_loader.label_type == "anomaly":
-                    y = tf.convert_to_tensor(item_dict["window_anomalies"])
-                elif train_loader.label_type == "next_log":
-                    y = tf.convert_to_tensor(item_dict["window_labels"])
-
-                g_loss = generator.loss_function(logits_fake, logits_real)
-                d_loss = discriminator.loss_function(logits_fake, y)
-                train_loss += (g_loss + d_loss)
             optimize(tape, generator, g_loss)
+
+            with tf.GradientTape(persistent=True) as tape:
+                # Discriminator Train
+                G_sample_fake = generator.call(x)
+                D_sample_fake = discriminator.call(G_sample_fake)
+                D_sample_real = tf.ones_like(D_sample_fake,dtype=np.int32)
+                d_loss = discriminator.loss_function(D_sample_fake, D_sample_real,
+                                                 G_sample_fake, tf.zeros_like(G_sample_fake,dtype=np.int32))
+
             optimize(tape, discriminator, d_loss)
 
         epoch_loss = epoch_loss / batch_cnt
@@ -188,6 +193,6 @@ if __name__ == "__main__":
     # discriminator_model.build((None, feature_len))
     # inputs = tf.keras.Input(shape=(max_input_senquence_len,))
     # abe = discriminator_model.call(inputs)
-    noise_z = sample_noise(batch_size, feature_len)
 
-    GAN_train(discriminator=discriminator_model, generator=generator_model, epoches=10, train_loader=dataset_train, noise_z=noise_z)
+
+    new_GAN_train(discriminator=discriminator_model, generator=generator_model, epoches=10, train_loader=dataset_train)

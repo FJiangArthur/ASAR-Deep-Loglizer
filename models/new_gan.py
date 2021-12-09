@@ -1,169 +1,189 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+import time
+from collections import defaultdict
 
-import sys
-sys.path.append("../")
-import argparse
+import numpy as np
 import tensorflow as tf
-import random
-from models.data_generator import tf_data_generator
+from tensorflow.keras import Sequential
+from tensorflow.keras.layers import Dense, Flatten, Reshape, ReLU
+from tensorflow.math import exp, sqrt, square
+
+from models.tf_basemodel import tf_BasedModel
+
+NOISE_DIM = 96
 
 
-from models.gan import Discriminator, Generator, sample_noise
-from deeploglizer.common.preprocess import FeatureExtractor
-from deeploglizer.common.dataloader import load_sessions, log_dataset
-from deeploglizer.common.utils import seed_everything, dump_params, dump_final_results
+def sample_noise(batch_size: int, dim: int) -> tf.Tensor:
+    return tf.random.uniform(shape=(batch_size, dim), minval=-1, maxval=1)
 
 
-parser = argparse.ArgumentParser()
+class Generator(tf_BasedModel):
+    """Model class for the generator"""
 
-##### Model params
-parser.add_argument("--model_name", default="Autoencoder", type=str)
-parser.add_argument("--hidden_size", default=128, type=int)
-parser.add_argument("--num_directions", default=2, type=int)
-parser.add_argument("--num_layers", default=2, type=int)
-parser.add_argument("--embedding_dim", default=32, type=int)
+    def __init__(
+            self,
+            meta_data,
+            batch_sz,
+            input_size,
+            num_keys,
+            hidden_size=100,
+            num_directions=2,
+            num_layers=3,
+            window_size=None,
+            use_attention=False,
+            embedding_dim=16,
+            model_save_path="./cnn_models",
+            feature_type="sequentials",
+            label_type="next_log",
+            eval_type="session",
+            topk=5,
+            use_tfidf=False,
+            freeze=False,
+            gpu=-1,
+            **kwargs
+    ):
+        super().__init__(
+            meta_data=meta_data,
+            batch_sz=batch_sz,
+            model_save_path=model_save_path,
+            feature_type=feature_type,
+            label_type=label_type,
+            eval_type=eval_type,
+            topk=topk,
+            use_tfidf=use_tfidf,
+            embedding_dim=embedding_dim,
+            freeze=freeze,
+            gpu=gpu,
+            **kwargs
+        )
+        self.num_labels = meta_data["num_labels"]
+        self.num_layers = num_layers
+        self.feature_type = feature_type
+        self.label_type = label_type
+        self.hidden_size = hidden_size
+        self.num_directions = num_directions
+        self.use_tfidf = use_tfidf
+        self.embedding_dim = embedding_dim
 
-##### Dataset params
-parser.add_argument("--dataset", default="HDFS", type=str)
-parser.add_argument(
-    "--data_dir", default="../data/processed/HDFS_100k/hdfs_1.0_tar", type=str
-)
-parser.add_argument("--window_size", default=10, type=int)
-parser.add_argument("--stride", default=1, type=int)
+        self.leaky_relu = tf.keras.layers.LeakyReLU(alpha=0.01)
+        self.input_size = input_size
+        self.hidden_size = hidden_size
+        self.num_layers = num_layers
+        self.num_keys = num_keys
+        self.emb_dimension = embedding_dim
+        # self.lstm = tf.keras.layers.LSTM(self.hidden_size, return_state=True)
 
-##### Input params
-parser.add_argument("--feature_type", default="sequentials", type=str, choices=["sequentials", "semantics"])
-parser.add_argument("--use_tfidf", action="store_true")
-parser.add_argument("--max_token_len", default=50, type=int)
-parser.add_argument("--min_token_count", default=1, type=int)
-# Uncomment the following to use pretrained word embeddings. The "embedding_dim" should be set as 300
-# parser.add_argument(
-#     "--pretrain_path", default="../data/pretrain/wiki-news-300d-1M.vec", type=str
-# )
+        # self.lstm = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(self.hidden_size))
 
-##### Training params
-parser.add_argument("--epoches", default=100, type=int)
-parser.add_argument("--batch_size", default=1024, type=int)
-parser.add_argument("--learning_rate", default=0.01, type=float)
-parser.add_argument("--anomaly_ratio", default=0.1, type=float)
-parser.add_argument("--patience", default=3, type=int)
+        rnn_cells = [tf.keras.layers.LSTMCell(self.hidden_size) for _ in range(self.num_layers)]
+        stacked_lstm = tf.keras.layers.StackedRNNCells(rnn_cells)
+        self.lstm = tf.keras.layers.RNN(stacked_lstm)
 
-##### Others
-parser.add_argument("--random_seed", default=42, type=int)
-parser.add_argument("--gpu", default=0, type=int)
-parser.add_argument("--cache", default=False, type=bool)
-
-params = vars(parser.parse_args())
-
-model_save_path = dump_params(params)
-
-learning_rate = 1e-3
-beta_1 = 0.1
-optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate, beta_1=beta_1)
-
-
-def optimize(tape: tf.GradientTape, model: tf.keras.Model, loss: tf.Tensor) -> None:
-    gradients = tape.gradient(loss, model.trainable_variables)
-    optimizer.apply_gradients(zip(gradients, model.trainable_variables))
-
-def gan_train(discriminator, generator, epoches, train_loader, noise_z):
-    for epoch in range(1, epoches + 1):
-        train_loss = 0
-        num_classes = 10
-        loss = None
-
-        for batch_idx, batch_list in enumerate(train_loader):
-            y = tf.convert_to_tensor([sub['window_anomalies'] for sub in batch_list])
-            x = tf.convert_to_tensor([sub['features'] for sub in batch_list])
-            # y = dict["window_anomalies"]
-            # x = dict["features"]
-
-            # x_t = x.transpose(1, 0)
-
-            with tf.GradientTape(persistent=True) as tape:
-                G_sample = generator(noise_z)
-                labels_real = y
-                logits_real = discriminator(x)
-                # re-use discriminator weights on new inputs
-                logits_fake = discriminator(G_sample)
-
-                g_loss = generator.loss_function(logits_fake, logits_real)
-                d_loss = discriminator.loss_function(logits_fake, logits_real)
-                train_loss += (g_loss + d_loss)
-            optimize(tape, generator, g_loss)
-            optimize(tape, discriminator, d_loss)
-
-        print(f"Train Epoch: {epoch} \tLoss: {train_loss / len(train_loader):.6f}")
+        self.dense1 = tf.keras.layers.Dense(units=self.hidden_size, activation=self.leaky_relu)
+        self.dense2 = tf.keras.layers.Dense(units=self.input_size, activation=self.leaky_relu)
+        self.bce = tf.keras.losses.CategoricalCrossentropy()
 
 
-def gan_test(discriminator, generator, epoches, train_loader, noise_z):
-    for epoch in range(1, epoches + 1):
-        train_loss = 0
-        num_classes = 10
-        loss = None
+    @tf.function
+    def call(self, x):
+        x = tf.nn.embedding_lookup(self.embedding_matrix, x)
+        whole_seq_output = self.lstm(x)
+        whole_seq_output = self.dense2(self.dense1(whole_seq_output))
+        whole_seq_output = tf.nn.softmax(whole_seq_output)
+        return tf.cast(whole_seq_output, dtype=tf.int32)
 
-        for batch_idx, batch_list in enumerate(train_loader):
-            y = tf.convert_to_tensor([sub['window_anomalies'] for sub in batch_list])
-            x = tf.convert_to_tensor([sub['features'] for sub in batch_list])
-            # y = dict["window_anomalies"]
-            # x = dict["features"]
-
-            # x_t = x.transpose(1, 0)
-
-
-            G_sample = generator(noise_z)
-            labels_real = y
-            logits_real = discriminator(x)
-            # re-use discriminator weights on new inputs
-            logits_fake = discriminator(G_sample)
-
-            g_loss = generator.loss_function(logits_fake, logits_real)
-            d_loss = discriminator.loss_function(logits_fake, logits_real)
-            train_loss += (g_loss + d_loss)
-
-        print(f"Testing Epoch: {epoch} \tLoss: {train_loss / len(train_loader):.6f}")
+    @tf.function
+    def loss_function(self, D_predictions, D_labels, G_predictions, G_labels):
+        G_loss = tf.keras.losses.CategoricalCrossentropy()(D_labels, D_predictions)
+        G_loss += tf.keras.metrics.mean_squared_error(G_labels, G_predictions)
+        return G_loss
 
 
-if __name__ == "__main__":
-    seed_everything(params["random_seed"])
+class Discriminator(tf_BasedModel):
+    """Model class for the discriminator"""
 
-    session_train, session_test = load_sessions(data_dir=params["data_dir"])
-    ext = FeatureExtractor(**params)
+    def __init__(
+            self,
+            meta_data,
+            batch_sz,
+            input_size,
+            num_keys,
+            hidden_size=100,
+            num_directions=2,
+            num_layers=3,
+            window_size=None,
+            use_attention=False,
+            embedding_dim=16,
+            model_save_path="./cnn_models",
+            feature_type="sequentials",
+            label_type="next_log",
+            eval_type="session",
+            topk=5,
+            use_tfidf=False,
+            freeze=False,
+            gpu=-1,
+            **kwargs
+    ):
+        super().__init__(
+            meta_data=meta_data,
+            batch_sz=batch_sz,
+            model_save_path=model_save_path,
+            feature_type=feature_type,
+            label_type=label_type,
+            eval_type=eval_type,
+            topk=topk,
+            use_tfidf=use_tfidf,
+            embedding_dim=embedding_dim,
+            freeze=freeze,
+            gpu=gpu,
+            **kwargs
+        )
+        self.num_labels = meta_data["num_labels"]
+        self.num_layers = num_layers
+        self.feature_type = feature_type
+        self.label_type = label_type
+        self.hidden_size = hidden_size
+        self.num_directions = num_directions
+        self.use_tfidf = use_tfidf
+        self.embedding_dim = embedding_dim
 
-    session_train = ext.fit_transform(session_train)
-    session_test = ext.transform(session_test, datatype="test")
-    dataset_train = tf_data_generator(session_train, feature_type=params["feature_type"], batch_size=params["batch_size"], shuffle=True)
-    dataset_test = tf_data_generator(session_test, feature_type=params["feature_type"], batch_size=params["batch_size"], shuffle=True)
-
-    batch_size = 1024
-    # our noise dimension
-
-
-    # create generator and discriminator
-    # ext.meta_data = {'num_labels': 14, 'vocab_size': 14}
-    max_input_senquence_len = dataset_train.max_input_size
-    feature_len = dataset_train.feature_len
-    hidden_size = 256
-    num_layers = 2
-    num_keys = ext.meta_data['vocab_size']
-    emb_dimension = 128
-
-    num_labels = ext.meta_data['num_labels']
+        self.leaky_relu = tf.keras.layers.LeakyReLU(alpha=0.01)
+        self.input_size = input_size
+        self.hidden_size = hidden_size
+        self.num_layers = num_layers
+        self.num_keys = num_keys
+        self.emb_dimension = embedding_dim
 
 
-    generator_model = Generator(feature_len, hidden_size, num_layers, num_keys, emb_dimension)
-    generator_model.build((None, feature_len))
-    # generator_model.build((None, max_input_senquence_len))
-    # inputs = tf.keras.Input(shape=(max_input_senquence_len,))
-    # abe = generator_model.call(inputs)
+        rnn_cells = [tf.keras.layers.LSTMCell(self.hidden_size) for _ in range(self.num_layers)]
+        stacked_lstm = tf.keras.layers.StackedRNNCells(rnn_cells)
+        self.lstm = tf.keras.layers.RNN(stacked_lstm)
 
-    discriminator_model = Discriminator(feature_len, hidden_size, num_layers, num_keys, emb_dimension, num_labels)
-    discriminator_model.build((None, feature_len))
-    # inputs = tf.keras.Input(shape=(max_input_senquence_len,))
-    # abe = discriminator_model.call(inputs)
-    noise_z = sample_noise(batch_size, feature_len)
+        self.dense1 = tf.keras.layers.Dense(units=self.hidden_size, activation=self.leaky_relu)
+        # TODO: Tune 100, use leaky relu
+        self.dense2 = tf.keras.layers.Dense(units=self.input_size, activation=self.leaky_relu)
+        # TODO: Change to multi-class
+        self.dense3 = tf.keras.layers.Dense(units=self.num_labels, activation='sigmoid')
 
-    gan_train(discriminator_model, generator_model, 10, dataset_train, noise_z)
-    print("Testing Now")
-    gan_test(discriminator_model, generator_model, 10, dataset_train, noise_z)
+        self.bce = tf.keras.losses.CategoricalCrossentropy()
+
+    @tf.function
+    def call(self, x):
+        # x = tf.convert_to_tensor(input_dict["features"])
+
+        x = tf.nn.embedding_lookup(self.embedding_matrix, x)
+        x = self.lstm(x)
+        whole_seq_output = self.dense1(x)
+
+        # whole_seq_output = tf.concat((whole_seq_output, tf.cast(labels, tf.float32)), axis=1)
+
+        whole_seq_output = self.dense2(whole_seq_output)
+        whole_seq_output = self.dense3(whole_seq_output)
+        whole_seq_output = tf.nn.softmax(whole_seq_output,axis=-1)
+        whole_seq_output = tf.argmax(whole_seq_output,axis=1)
+        return tf.cast(whole_seq_output, dtype=tf.int32)
+
+    @tf.function
+    def loss_function(self, D_real, D_real_labels, D_fake, D_fake_labels):
+        G_loss = self.bce(D_real, D_real_labels) + \
+                 self.bce(D_fake, D_fake_labels)
+        return G_loss
