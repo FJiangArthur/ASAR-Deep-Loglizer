@@ -170,7 +170,7 @@ We started out with an ambition to develop a universal log analyzer but it turne
 
 One of our biggest takeaways from this project is that we learned about the challenges in data collection and preprocessing. We learned about handling various encoding issues in the data and cleaning it so that we could generate a log file that could be easily processed by our model.
 
-If we had more time, we would have tried to extend our model to the multiclass classification problem. We would have tried to gather more uniform data for multiclass classification and worked on improving the metrics of our model on that data so that we could have had a much more generalized version of our model. We would have also tried to work on a dashboard that would have displayed the metrics in a graphical way so that the users would have been able to easily compare the performance of different models.
+One of the future directions for our model could be to extend it to the multiclass classification problem. We would have tried to gather more uniform data for multiclass classification and worked on improving the metrics of our model on that data so that we could have had a much more generalized version of our model which could classify the logs into different classes of anomalies instead seggregating all the anomalies into one single class. We would have also tried to work on a dashboard that would have displayed the metrics in a graphical way so that the users would have been able to easily compare the performance of different models. Also, since we know that log analysis is a very domain specific task, another future work for our model would be to add a functionality to fine-tune the model for domain specific analysis.
 
 ## References:
 
